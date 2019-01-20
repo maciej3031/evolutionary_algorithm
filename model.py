@@ -5,12 +5,13 @@ from tqdm import tqdm
 
 
 class EvolutionaryAlgorithm:
-    def __init__(self, population_size, number_of_dimensions, number_of_parents, crossing_likelihood,
+    def __init__(self, population_size, number_of_dimensions, number_of_parents, crossing_likelihood, mutation_likehood,
                  testing_function_number, crossing_method='average', std_for_mutation=1, pair_quality_function='min'):
         self.population_size = population_size
         self.number_of_dimensions = number_of_dimensions
         self.number_of_parents = number_of_parents
         self.crossing_likelihood = crossing_likelihood
+        self.mutation_likehood = mutation_likehood
         self.testing_function_number = testing_function_number
         self.testing_function_object = Function(testing_function_number, number_of_dimensions)
         self.testing_function = self.testing_function_object.get_eval_function()
@@ -52,7 +53,9 @@ class EvolutionaryAlgorithm:
         return child
 
     def _mutate(self, children):
-        return np.random.normal(children, self.std_for_mutation)
+        is_changed = np.random.random(size=children.shape) < self.mutation_likehood
+        deviation = np.random.normal(np.zeros(shape=children.shape), self.std_for_mutation)
+        return children + is_changed*deviation
 
     def _get_pair_quality(self, pair):
         score_1 = self.testing_function(pair[0])
@@ -85,7 +88,10 @@ class EvolutionaryAlgorithm:
             worst_value = max(scores)
             best_value = min(scores)
 
-            normalized_inverted_scores = [(1 - (rate - best_value) / (worst_value - best_value)) for rate in scores]
+            if(worst_value - best_value!=0):
+                normalized_inverted_scores = [(1 - (rate - best_value) / (worst_value - best_value)) for rate in scores]
+            else:
+                normalized_inverted_scores = [1 for rate in scores]
             probs = softmax(normalized_inverted_scores)
 
             # 3. Wybór osobników
