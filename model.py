@@ -6,7 +6,8 @@ from tqdm import tqdm
 
 class EvolutionaryAlgorithm:
     def __init__(self, population_size, number_of_dimensions, number_of_parents, crossing_likelihood, mutation_likehood,
-                 testing_function_number, crossing_method='average', std_for_mutation=1, pair_quality_function='min'):
+                 testing_function_number, crossing_method='average', std_for_mutation=1, pair_quality_function='min',
+                 max_iterations_number=None):
         self.population_size = population_size
         self.number_of_dimensions = number_of_dimensions
         self.number_of_parents = number_of_parents
@@ -20,7 +21,11 @@ class EvolutionaryAlgorithm:
         self.threshold = self.testing_function_object.info()['threshold']
         self.crossing_method = crossing_method
         self.std_for_mutation = std_for_mutation
-        self.max_iterations_number = 10000 * number_of_dimensions
+        if(max_iterations_number):
+            assert(max_iterations_number>0)
+            self.max_iterations_number  = max_iterations_number
+        else:
+            self.max_iterations_number = 10000 * number_of_dimensions
         self.best_solution_found = None
         self.score_for_best_solution = 999999999999999
         self.pair_quality_function = pair_quality_function
