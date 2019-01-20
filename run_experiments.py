@@ -23,7 +23,7 @@ def find_defaults():
                        mutation_likehood=0.1,
                        testing_function_number=1,
                        crossing_method='average',
-                       std_for_mutation=1,
+                       std_for_mutation_factor=0.01,
                        pair_quality_function='min',
                        max_iterations_number=10) #max, average
     model = EvolutionaryAlgorithm(**starting_params)

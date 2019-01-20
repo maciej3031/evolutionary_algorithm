@@ -161,9 +161,13 @@ class EvolutionaryAlgorithm:
             worst_value = max(scores)
             best_value = min(scores)
 
-            normalized_inverted_scores = [(1 - (rate - best_value) / (worst_value - best_value)) for rate in scores]
+            if(worst_value - best_value!=0):
+                normalized_inverted_scores = [(1 - (rate - best_value) / (worst_value - best_value)) for rate in scores]
+            else:
+                normalized_inverted_scores = [1 for rate in scores]
+            
             probs = softmax(normalized_inverted_scores)
-
+            
             # 3. Wybór najlepszych par
             pairs_indices = np.array(range(self.population_size // 2))
             chosen_indices = np.random.choice(pairs_indices, self.number_of_parents // 2, p=probs)
