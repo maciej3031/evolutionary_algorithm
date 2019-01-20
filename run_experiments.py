@@ -1,0 +1,42 @@
+from model import EvolutionaryAlgorithm
+import sys
+import numpy as np
+import pandas as pd
+
+#model = EvolutionaryAlgorithm(population_size=30,
+#                              number_of_dimensions=30,
+#                              number_of_parents=20,
+#                              crossing_likelihood=0.3,
+#                              mutation_likehood=0.1,
+#                              testing_function_number=1,
+#                              crossing_method='average',
+#                              std_for_mutation=1,
+#                              pair_quality_function='min')
+# model.run_classic()
+# model.run_marriage()
+
+def findDefaults():
+    starting_params = {population_size:30,
+                       number_of_dimensions:30,
+                       number_of_parents:20,
+                       crossing_likelihood:0.3,
+                       mutation_likehood:0.1,
+                       testing_function_number:1,
+                       crossing_method:'average',
+                       std_for_mutation:1,
+                       pair_quality_function:'min'} #max, average
+    
+    
+
+def main(argv):
+    if(len(argv)==0):
+        print("No arguments, running all experiments.")
+        argv = ['defaults']
+    if("defaults" in argv):
+        findDefaults()
+
+
+
+
+if __name__ == "__main__":
+   main(sys.argv[1:])
