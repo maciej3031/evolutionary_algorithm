@@ -20,7 +20,7 @@ class EvolutionaryAlgorithm:
         self.threshold = self.testing_function_object.info()['threshold']
         self.crossing_method = crossing_method
         self.std_for_mutation = std_for_mutation
-        self.max_iterations_number = 10000 * population_size
+        self.max_iterations_number = 10000 * number_of_dimensions
         self.best_solution_found = None
         self.score_for_best_solution = 999999999999999
         self.pair_quality_function = pair_quality_function
