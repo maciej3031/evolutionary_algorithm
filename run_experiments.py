@@ -15,8 +15,7 @@ from cec2005real.cec2005 import Function
 #                              pair_quality_function='min')
 # model.run_classic()
 # model.run_marriage()
-
-def findDefaults():
+def find_defaults():
     starting_params = dict(population_size=30,
                        number_of_dimensions=30,
                        number_of_parents=20,
@@ -36,7 +35,7 @@ def main(argv):
         print("No arguments, running all experiments.")
         argv = ['defaults']
     if("defaults" in argv):
-        findDefaults()
+        find_defaults()
 
 
 
