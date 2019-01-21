@@ -83,7 +83,10 @@ class EvolutionaryAlgorithm:
         # 1. Inicjacja populacji
         population = np.random.uniform(self.bottom_limit, self.top_limit,
                                        (self.population_size, self.number_of_dimensions))
-        for n in tqdm(range(self.max_iterations_number)):
+        for n in range(self.max_iterations_number):
+            if n%10000 == 0:
+                print("Iteration {0} of {1}".format(n, self.max_iterations_number))
+            
             # 2. Ocena osobników
             scores = []
             for individual in population:
@@ -151,7 +154,9 @@ class EvolutionaryAlgorithm:
         np.random.shuffle(population)
         pairs = np.stack([population[i:i + 2] for i in range(0, len(population), 2)])
 
-        for n in tqdm(range(self.max_iterations_number)):
+        for n in range(self.max_iterations_number):
+            if n%10000 == 0:
+                print("Iteration {0} of {1}".format(n, self.max_iterations_number))
             # 2. Ocena par
             scores = []
             for pair in pairs:
