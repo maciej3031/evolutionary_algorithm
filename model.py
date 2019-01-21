@@ -5,14 +5,14 @@ from tqdm import tqdm
 
 
 class EvolutionaryAlgorithm:
-    def __init__(self, population_size, number_of_dimensions, number_of_parents, crossing_likelihood, mutation_likehood,
+    def __init__(self, population_size, number_of_dimensions, number_of_parents, crossing_likelihood, mutation_likelihood,
                  testing_function_number, crossing_method='average', std_for_mutation_factor=0.01, pair_quality_function='min',
                  max_iterations_number=None):
         self.population_size = population_size
         self.number_of_dimensions = number_of_dimensions
         self.number_of_parents = number_of_parents
         self.crossing_likelihood = crossing_likelihood
-        self.mutation_likehood = mutation_likehood
+        self.mutation_likelihood = mutation_likelihood
         self.testing_function_number = testing_function_number
         self.testing_function_object = Function(testing_function_number, number_of_dimensions)
         self.testing_function = self.testing_function_object.get_eval_function()
@@ -58,7 +58,7 @@ class EvolutionaryAlgorithm:
         return child
 
     def _mutate(self, children):
-        is_changed = np.random.random(size=children.shape) < self.mutation_likehood
+        is_changed = np.random.random(size=children.shape) < self.mutation_likelihood
         deviation = np.random.normal(np.zeros(shape=children.shape), self.std_for_mutation)
         return children + is_changed*deviation
 
