@@ -7,7 +7,7 @@ from tqdm import tqdm
 class EvolutionaryAlgorithm:
     def __init__(self, population_size, number_of_dimensions, number_of_parents, crossing_likelihood, mutation_likelihood,
                  testing_function_number, crossing_method='average', std_for_mutation_factor=0.01, pair_quality_function='min',
-                 max_iterations_number=None):
+                 max_iterations_number=None, verbose = 1):
         self.population_size = population_size
         self.number_of_dimensions = number_of_dimensions
         self.number_of_parents = number_of_parents
@@ -21,6 +21,7 @@ class EvolutionaryAlgorithm:
         self.threshold = self.testing_function_object.info()['threshold']
         self.crossing_method = crossing_method
         self.std_for_mutation = std_for_mutation_factor*(self.top_limit - self.bottom_limit)
+        self.verbose = verbose
         if(max_iterations_number):
             assert(max_iterations_number>0)
             self.max_iterations_number  = max_iterations_number
@@ -79,13 +80,15 @@ class EvolutionaryAlgorithm:
         print(self.testing_function_object.info(), end='\n')
 
     def run_classic(self):
-        self.show_testing_function()
+        if self.verbose>=1:
+            self.show_testing_function()
         # 1. Inicjacja populacji
         population = np.random.uniform(self.bottom_limit, self.top_limit,
                                        (self.population_size, self.number_of_dimensions))
         for n in range(self.max_iterations_number):
-            if n%10000 == 0:
-                print("Iteration {0} of {1}".format(n, self.max_iterations_number))
+            if self.verbose>=1:
+                if n%10000 == 0:
+                    print("Iteration {0} of {1}".format(n, self.max_iterations_number))
             
             # 2. Ocena osobników
             scores = []
@@ -135,18 +138,21 @@ class EvolutionaryAlgorithm:
             if self.score_for_best_solution > best_scores[0][0]:
                 self.best_solution_found = best_scores[0][1]
                 self.score_for_best_solution = best_scores[0][0]
-                print('New best score: ', self.score_for_best_solution)
+                if self.verbose>=2:
+                    print('New best score: ', self.score_for_best_solution)
 
             # 7. Przerwij jeżeli osiągneliśmy minimum
             if self.score_for_best_solution - self.threshold <= 0:
-                print('Solution found after {} iteration'.format(n))
+                if self.verbose>=1:
+                    print('Solution found after {} iteration'.format(n))
                 break
-
-        print("Solution: ", self.best_solution_found)
-        print("Score for solution :", self.score_for_best_solution)
+        if self.verbose>=1:
+            print("Solution: ", self.best_solution_found)
+            print("Score for solution :", self.score_for_best_solution)
 
     def run_marriage(self):
-        self.show_testing_function()
+        if self.verbose>=1:
+            self.show_testing_function()
         # 1. Inicjacja populacji
         population = np.random.uniform(self.bottom_limit, self.top_limit,
                                        (self.population_size, self.number_of_dimensions))
@@ -155,8 +161,9 @@ class EvolutionaryAlgorithm:
         pairs = np.stack([population[i:i + 2] for i in range(0, len(population), 2)])
 
         for n in range(self.max_iterations_number):
-            if n%10000 == 0:
-                print("Iteration {0} of {1}".format(n, self.max_iterations_number))
+            if self.verbose>=1:
+                if n%10000 == 0:
+                    print("Iteration {0} of {1}".format(n, self.max_iterations_number))
             # 2. Ocena par
             scores = []
             for pair in pairs:
@@ -214,12 +221,14 @@ class EvolutionaryAlgorithm:
             if self.score_for_best_solution > best_scores[0][0]:
                 self.best_solution_found = best_scores[0][1]
                 self.score_for_best_solution = best_scores[0][0]
-                print('New best score: ', self.score_for_best_solution)
+                if self.verbose>=2:
+                    print('New best score: ', self.score_for_best_solution)
 
             # 7. Przerwij jeżeli osiągneliśmy minimum
             if self.score_for_best_solution - self.threshold <= 0:
-                print('Solution found after {} iteration'.format(n))
+                if self.verbose>=1:
+                    print('Solution found after {} iteration'.format(n))
                 break
-
-        print("Solution: ", self.best_solution_found)
-        print("Score for solution :", self.score_for_best_solution)
+        if self.verbose>=1:
+            print("Solution: ", self.best_solution_found)
+            print("Score for solution :", self.score_for_best_solution)
