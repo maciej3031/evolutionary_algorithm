@@ -29,6 +29,7 @@ class EvolutionaryAlgorithm:
             self.max_iterations_number = 10000 * number_of_dimensions
         self.best_solution_found = None
         self.score_for_best_solution = 999999999999999
+        self.scores_history = []
         self.pair_quality_function = pair_quality_function
 
     def _cross(self, parents):
@@ -138,6 +139,7 @@ class EvolutionaryAlgorithm:
             if self.score_for_best_solution > best_scores[0][0]:
                 self.best_solution_found = best_scores[0][1]
                 self.score_for_best_solution = best_scores[0][0]
+                self.scores_history.append((n,best_scores[0][0]))
                 if self.verbose>=2:
                     print('New best score: ', self.score_for_best_solution)
 
@@ -221,6 +223,7 @@ class EvolutionaryAlgorithm:
             if self.score_for_best_solution > best_scores[0][0]:
                 self.best_solution_found = best_scores[0][1]
                 self.score_for_best_solution = best_scores[0][0]
+                self.scores_history.append((n,best_scores[0][0]))
                 if self.verbose>=2:
                     print('New best score: ', self.score_for_best_solution)
 
