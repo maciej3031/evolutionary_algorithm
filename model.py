@@ -115,7 +115,7 @@ class EvolutionaryAlgorithm:
             # 4. Krzyżowanie i mutacja wybranych osobników z uzyskaniem zbioru potomków
             children = self._cross(parents)
             children = self._mutate(children)
-
+            #print(len(children))
             # 5. Nowa populacja z najlepszych
             if children.size > 0:
                 children_and_parents = np.concatenate([population, children], axis=0)

@@ -28,41 +28,32 @@ def score_param(param_value, params, testing_function_number, param_name):
     model.run_classic()
     score = model.score_for_best_solution
     exec_time_s = time.time() - exec_time_s
-    print("for {0} = {1}; got: {2};  in time: {3} s".format(param_name, param_value, score, exec_time_s))
-    return score,exec_time_s
+    exec_time_m = int(exec_time_s/60.0)
+    print("for {0} = {1}; got: {2};  in time: {3} m".format(param_name, param_value, score, exec_time_m))
+    return score,exec_time_m
 
-params = dict(population_size=30,
-              number_of_dimensions=10,
-              number_of_parents=15,
-              crossing_likelihood=0.3,
-              mutation_likelihood=0.1,
-              testing_function_number=1,
-              crossing_method='average',
-              std_for_mutation_factor=0.01,
-              pair_quality_function='min',
-              max_iterations_number=100
-              )
 # Sprawdzane listy
-l_population_size = [6,10,15,30]
+l_population_size = [6, 10, 30, 50, 100] #[6,10,15,30]
                      
-l_number_of_parents = [6, 10, 15, 30]
-l_crossing_likelihood = [0.05, 0.2, 0.3, 0.4]
+l_number_of_parents = [30, 50, 100] #[6, 10, 15, 30]
+l_crossing_likelihood = [0.05, 0.2, 0.45]
 l_crossing_method = ['replace', 'average']
-l_mutation_likelihood = [0.05, 0.1, 0.2]
-l_std_for_mutation_factor = [0.1, 0.01, 0.005, 0.001]
+l_mutation_likelihood = [0.001,0.01, 0.05, 0.1, 0.2, 0.4, 0.6]
+l_std_for_mutation_factor = [0.1, 0.05, 0.01, 0.001, 0.0001]
 #
-l_testing_function_number = [1,7,13,23]
+l_testing_function_number = [12]#[3,8,12,20] #[1,7,13,23]
 #number_of_dimensions = 30
 repeats = range(1) 
-def optimize_param(param_name, param_values):        
+def optimize_param(param_name, param_values, params, name=""):
     columns = ["function","trial"]+param_values + [str(val)+"_time" for val in param_values]
     # Wyniki
     results = []
     for testing_function_number in l_testing_function_number:
+        print("*** Running Function{0}-name{1} ***".format(testing_function_number,name))
         for trial in repeats:
             run_results = [testing_function_number, trial]
             #Rownolegla proba dla roznych wartosci parametru
-            pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
+            pool = multiprocessing.Pool(processes=len(param_values))#multiprocessing.cpu_count())
             partial_score_param = partial(score_param, 
                                           params = params, 
                                           testing_function_number=testing_function_number, 
@@ -86,7 +77,7 @@ def optimize_param(param_name, param_values):
             results.append(run_results)
     results = pd.DataFrame(columns = columns, data = results)
     tested_names = str(param_values)[1:-1].replace(",","_").replace(" ","")
-    filename = "../default_{0}_{1}.csv".format(param_name,tested_names)
+    filename = "../default_{0}_{1}_{2}.csv".format(param_name,tested_names, name)
     print("saving to {0}".format(filename))
     print()
     results.to_csv(filename)
@@ -104,14 +95,30 @@ def optimize_param(param_name, param_values):
     #return best_scoring_parameter_value
 
 def main(argv):
-    # Optymalizacja parametr po parametrze
-    optimize_param('population_size', l_population_size)
-    #optimize_param('number_of_parents', l_number_of_parents)
-    #optimize_param('crossing_likelihood', l_crossing_likelihood)
-    #optimize_param('crossing_method', l_crossing_method)
-    #optimize_param('mutation_likelihood', l_mutation_likelihood)
-    #optimize_param('std_for_mutation_factor', l_std_for_mutation_factor)
+    params = dict(
+              population_size=30,
+              number_of_dimensions=10,
+              number_of_parents=15,
+              crossing_likelihood=0.2,
+              mutation_likelihood=0.05,
+              testing_function_number=1,
+              crossing_method='average',
+              std_for_mutation_factor=0.01,
+              pair_quality_function='min'
+              #,max_iterations_number=5
+              )
     
+    # Optymalizacja parametr po parametrze
+    #optimize_param('population_size', l_population_size, params)
+    #optimize_param('crossing_likelihood', l_crossing_likelihood, params)
+    #for mutation_factor in l_std_for_mutation_factor:
+    #    params['std_for_mutation_factor'] = mutation_factor
+    #    optimize_param('mutation_likelihood', l_mutation_likelihood, params,"_mf{0}".format(mutation_factor))
+    #params['mutation_likelihood'] = 0.4
+    #optimize_param('std_for_mutation_factor', [0.001], params,"moreF")
+    params['mutation_likelihood'] = 0.05
+    optimize_param('std_for_mutation_factor', [0.01], params,"moreF12")
+    #optimize_param('crossing_method', l_crossing_method, params)
 
 
 if __name__ == "__main__":
