@@ -8,7 +8,7 @@ from functools import partial
 from cec2005real.cec2005 import Function
 
 repeats_seeds = [5,42,123]
-first_function_nr = 1
+first_function_nr = 15
 last_function_nr = 25
 
 def fit_model_classic(seed, params):
