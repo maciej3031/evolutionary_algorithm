@@ -22,7 +22,8 @@ def fit_model_classic(seed, params):
           run_time,
           model.score_for_best_solution,
           run_time))
-    return (model.score_for_best_solution,model.scores_history)
+    return (model.score_for_best_solution,model.scores_history, 
+            model.best_solution_found)
 
 def fit_model_marriage(seed, params):
     np.random.seed(seed)
@@ -40,10 +41,11 @@ def fit_model_marriage(seed, params):
 def save_results(results, results_name="../result"):
     # (Wynik, Historia), przy czym Historia = [(iteracja, poprawa), ...]
     print("\nSave results of name: {0}".format(results_name))
-    scores, histories = zip(*results)
+    scores, histories, best_solutions = zip(*results)
     print(scores)
     np.save(results_name+"_histories.npy",np.array(histories))
     np.save(results_name+"_scores.npy",np.array(scores))
+    np.save(results_name+"_best_solutions.npy",np.array(best_solutions))
 
 def run_save_results(function_nr, test_name="Test"):
     params = dict(
