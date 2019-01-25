@@ -36,7 +36,8 @@ def fit_model_marriage(seed, params):
           run_time,
           model.score_for_best_solution,
           run_time))
-    return (model.score_for_best_solution,model.scores_history)
+    return (model.score_for_best_solution,model.scores_history, 
+            model.best_solution_found)
 
 def save_results(results, results_name="../result"):
     # (Wynik, Historia), przy czym Historia = [(iteracja, poprawa), ...]
