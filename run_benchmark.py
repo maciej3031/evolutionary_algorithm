@@ -7,9 +7,14 @@ import multiprocessing
 from functools import partial
 from cec2005real.cec2005 import Function
 
-repeats_seeds = [5,42,123]
-first_function_nr = 15
-last_function_nr = 25
+repeats_seeds = [9, 32, 135, 333, 345, 543]
+#first_function_nr = 1
+#last_function_nr = 15
+#1-5, 6-12, 13-14, 15-25
+tested_functions = [9,12,13,14]#1,4,6 done  #14 vs 11
+
+test_name = "Test1"
+num_threads = 3
 
 def fit_model_classic(seed, params):
     np.random.seed(seed)
@@ -60,7 +65,7 @@ def run_save_results(function_nr, test_name="Test"):
               verbose = 1,
               testing_function_number=function_nr,
               pair_quality_function='min'
-              #,max_iterations_number=10000
+              #,max_iterations_number=10
               )
     #
     #Problem : Wątki używają tego samego generatora
@@ -69,7 +74,7 @@ def run_save_results(function_nr, test_name="Test"):
     run_name = "../{1}_benchmark_f{0}".format(function_nr,test_name)
     print("\n********* Running Function nr {} *********\n".format(function_nr))
     print("*** Run Classic ***")
-    pool = multiprocessing.Pool(processes=len(repeats_seeds))
+    pool = multiprocessing.Pool(processes=num_threads)
     fit_model = partial(fit_model_classic, params=params)
     results = pool.map(fit_model, repeats_seeds)
     save_results(results,run_name+"_classic")
@@ -90,10 +95,11 @@ def run_save_results(function_nr, test_name="Test"):
     save_results(results,run_name+"_marriage-max")
 
 def main(argv):
-    current_function_nr = first_function_nr
-    while current_function_nr<=last_function_nr:
-        run_save_results(current_function_nr, "Test0")
-        current_function_nr+=1
+    #current_function_nr = first_function_nr
+    #while current_function_nr<=last_function_nr:
+    for current_function_nr in tested_functions:
+        run_save_results(current_function_nr, test_name)
+        #current_function_nr+=1
     
     
 
